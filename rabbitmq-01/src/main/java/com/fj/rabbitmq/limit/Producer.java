@@ -34,14 +34,6 @@ public class Producer {
         //mandatory:true表示路由不到也不会从MQ中删除，然后会调用下面的handleReturn()方法；为false则不会
         channel.basicPublish(exchangeName,routeKey,true,null,msg.getBytes());
 
-        //对于一些不可达的消息很好的监听
-        channel.addReturnListener(new ReturnListener() {
-            @Override
-            public void handleReturn(int replyCode, String replyText, String exchange, String routingKey, AMQP.BasicProperties properties, byte[] body) throws IOException {
-
-            }
-        });
-
        /* channel.close();
         connection.close();*/
     }
