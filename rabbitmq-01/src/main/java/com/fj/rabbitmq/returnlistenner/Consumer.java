@@ -33,19 +33,9 @@ public class Consumer {
         channel.queueDeclare(queueName,true,false,false,null);
         channel.queueBind(queueName,exchangeName,routeKey);
 
-        // 创建消费者
-        QueueingConsumer queueingConsumer = new QueueingConsumer(channel);
 
         // 设置channel
-        channel.basicConsume(queueName,true,queueingConsumer);
-
-        // 获取消息
-        while (true){
-            QueueingConsumer.Delivery delivery = queueingConsumer.nextDelivery();
-
-            String s = new String(delivery.getBody());
-            System.out.println("消息为：" + s);
-        }
+        channel.basicConsume(queueName,true,new MyConsumer(channel));
 
 
 
