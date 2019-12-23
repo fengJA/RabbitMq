@@ -1,0 +1,51 @@
+server:
+  port: 8001
+
+
+spring:
+  rabbitmq:
+    addresses: 192.168.1.112
+    virtual-host: /
+    username: guest
+    password: guest
+    connection-timeout: 15000
+
+
+---
+
+#生产者
+spring:
+  profiles: producer
+    publisher-confirms: true
+    publisher-returns: true
+    template:
+      mandatory: true  # mandatory:true表示路由不到也不会从MQ中删除
+
+---
+
+
+# 消费者
+spring:
+  profiles: consumer
+  rabbitmq:
+    listener:
+      simple:
+        acknowledge-mode: manual
+        concurrency: 1
+        max-concurrency: 5
+
+
+
+spring:
+  rabbitmq:
+    listener:
+     order:
+      queue:
+        name: queue-2
+        durable: true
+      exchange:
+        name: exchange-1
+        durable: true
+        type: topic
+        ignoreDeclarationExceptions: true
+      key: springboot.*
